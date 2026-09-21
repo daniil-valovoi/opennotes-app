@@ -1,0 +1,32 @@
+# --- Gradle / Android build output ---
+.gradle/
+build/
+.kotlin/
+captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+*.aab
+*.ap_
+*.dex
+*.class
+
+# --- Local config / IDE ---
+local.properties
+.idea/
+*.iml
+.DS_Store
+.fleet/
+.vscode/
+*.sdocx
+
+# --- Rust build output (tools/sdocx-bridge) ---
+tools/sdocx-bridge/target/
+
+# --- Release artifacts ---
+dist/
+
+# --- Signing secrets ---
+keystore/keystore.properties
+*.jks
+*.keystore

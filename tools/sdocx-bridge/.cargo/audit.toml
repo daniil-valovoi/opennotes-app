@@ -1,0 +1,25 @@
+# cargo-audit configuration for the Rust parser bridge.
+#
+# `sdocx` depends on `zip` 8.x. The advisories below are reported against
+# `zip::ZipArchive::extract` / `ZipStreamReader::extract` (writing archive
+# entries to disk, symlink handling, SUID bits) and AES decryption. This
+# bridge never calls `extract*`: it opens archives in memory with
+# `ZipArchive::new` and reads individual entries, and the `aes-crypto`
+# feature is not enabled (only `deflate`). `sdocx` would have to move to
+# `zip` 9 for these to disappear from the audit; revisit when it does.
+#
+# The remaining exposure is the legacy Shrink/Reduce/Implode decoder
+# preallocation (RUSTSEC-2026-0547); those methods are not enabled, and
+# `ParseLimits` caps entry and archive sizes for untrusted input.
+
+[advisories]
+ignore = [
+    "RUSTSEC-2026-0548", # ZipStreamReader local-header names (API unused)
+    "RUSTSEC-2026-0429", # extract() symlink abort (API unused)
+    "RUSTSEC-2026-0367", # extract() SUID/SGID preservation (API unused)
+    "RUSTSEC-2026-0368", # extract() symlink targets (API unused)
+    "RUSTSEC-2026-0546", # extract() absolute/chained symlinks (API unused)
+    "RUSTSEC-2026-0547", # legacy decoders gated off; sizes limited
+    "RUSTSEC-2026-0369", # extract() permissions via symlinks (API unused)
+    "RUSTSEC-2026-0545", # AES entries; aes-crypto feature not enabled
+]
